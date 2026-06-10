@@ -1,0 +1,19 @@
+{
+    "author": "fsa-ara",
+    "description": "JavaScript Code Scanner",
+    "license": "MIT",
+    "name": "code-scanner",
+    "type": "module",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "vite --host",
+        "build": "vite build",
+        "preview": "vite preview --host",
+        "make:certs": "node scripts/mkcert.js"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.3.0",
+        "tailwindcss": "^4.3.0",
+        "vite": "^8.0.16"
+    }
+}
