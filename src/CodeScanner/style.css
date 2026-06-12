@@ -1,0 +1,70 @@
+[data-cs='scanner'] {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+}
+
+[data-cs='scanner'] video {
+    background-color: rgba(0, 0, 0, 1);
+    height: inherit;
+    object-fit: cover;
+    position: absolute;
+    width: inherit;
+    z-index: 1;
+}
+
+[data-cs='scanner'] svg {
+    position: absolute;
+    z-index: 1;
+}
+
+[data-cs='scanner'] svg path:first-of-type {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+[data-cs='scanner'] svg path:last-of-type.idle {
+    color: rgba(225, 225, 225, 1);
+}
+
+[data-cs='scanner'] svg path:last-of-type.success {
+    color: rgba(125, 175, 50, 1);
+}
+
+[data-cs='scanner'] svg path:last-of-type.error {
+    color: rgba(250, 75, 50, 1);
+}
+
+[data-cs='ui'] {
+    align-items: center;
+    color: rgba(225, 225, 225, 1);
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+    z-index: 3;
+}
+
+[data-cs='ui']:not(:last-of-type) {
+    justify-content: end;
+    padding-bottom: 3rem;
+}
+
+[data-cs='ui']:last-of-type {
+    gap: 3rem;
+    padding-top: 1.5rem;
+}
+
+[data-cs='ui']:last-of-type button {
+    border: 2px solid currentColor;
+    border-radius: 50rem;
+    cursor: pointer;
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    width: fit-content;
+}
+
+[data-cs='ui']:last-of-type button svg {
+    fill: currentColor;
+}
