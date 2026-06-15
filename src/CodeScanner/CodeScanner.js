@@ -22,13 +22,23 @@ export class CodeScanner {
         );
     };
 
-    listener = (...arg) => {
-        this.#events.addEventListener(...arg);
+    #onReturn = () => {
+        this.#events.dispatchEvent(new CustomEvent('onReturn'));
+    };
+
+    listener = (arg, callback) => {
+        if (Array.isArray(arg)) {
+            arg.forEach((e) => {
+                this.#events.addEventListener(e, callback);
+            });
+        }
+
+        this.#events.addEventListener(arg, callback);
     };
 
     start = () => this.#ctrl.start();
 
     stop = () => this.#ctrl.stop();
 
-    return = () => this.#ctrl.return();
+    cancel = () => this.#ctrl.cancel(this.#onReturn);
 }
