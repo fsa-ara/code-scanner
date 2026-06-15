@@ -8,19 +8,21 @@ import { AreaResolver } from '../resolvers/AreaResolver';
 export class ScannerController {
     #ctnr;
     #onScan;
+    #reader;
+    #media;
+    #ctrl;
     #data;
     #scnr;
     #ui;
     #state;
     #scope;
-    #reader;
-    #ctrl;
 
     constructor(ctnr, callback) {
         this.#ctnr = ctnr;
         this.#onScan = callback;
 
         this.#reader = null;
+        this.#media = null;
         this.#ctrl = null;
 
         this.#data = null;
@@ -49,6 +51,10 @@ export class ScannerController {
         this.#state.default();
     };
 
+    #build = (scnr, ui) => {
+        this.#ctnr.append(scnr, ...Object.values(ui));
+    };
+
     #setScope = (data) => {
         const tL = { x: data.scnr.left, y: data.scnr.top };
         const bR = { x: data.scnr.right, y: data.scnr.bottom };
@@ -62,18 +68,16 @@ export class ScannerController {
         };
     };
 
-    #build = (scnr, ui) => {
-        this.#ctnr.append(scnr, ...Object.values(ui));
-    };
-
-    #getDeviceId = async () => {
-        const media = await navigator.mediaDevices.getUserMedia({
+    #setMedia = async (mode) => {
+        this.#media = await navigator.mediaDevices.getUserMedia({
             video: {
-                facingMode: 'environment',
+                facingMode: mode,
             },
         });
+    };
 
-        return media.getVideoTracks()[0].getSettings().deviceId;
+    #getMediaId = async () => {
+        return this.#media.getVideoTracks()[0].getSettings().deviceId;
     };
 
     #isDetected = (resPts) => {
@@ -91,8 +95,10 @@ export class ScannerController {
         let timer = null;
         let code = null;
 
+        await this.#setMedia('environment');
+
         this.#ctrl = await this.#reader.decodeFromVideoDevice(
-            await this.#getDeviceId(),
+            await this.#getMediaId(),
             this.#ctnr.querySelector('video'),
             (result, error, controls) => {
                 try {
@@ -130,13 +136,16 @@ export class ScannerController {
 
     stop = () => {
         this.#ctrl.stop();
-
         this.#state.default();
+
+        this.#media.getTracks().forEach((media) => {
+            media.stop();
+        });
     };
 
-    return = () => {
+    cancel = (callback) => {
         this.#ctnr.querySelector('button').addEventListener('click', () => {
-            this.#ctrl.stop();
+            callback();
         });
     };
 }
