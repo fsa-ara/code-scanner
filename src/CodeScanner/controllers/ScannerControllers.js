@@ -13,17 +13,21 @@ export class ScannerController {
     #ui;
     #state;
     #scope;
+    #reader;
     #ctrl;
 
     constructor(ctnr, callback) {
         this.#ctnr = ctnr;
         this.#onScan = callback;
+
+        this.#reader = null;
+        this.#ctrl = null;
+
         this.#data = null;
         this.#scnr = null;
         this.#ui = null;
         this.#state = null;
         this.#scope = null;
-        this.#ctrl = null;
 
         this.#init();
     }
@@ -31,12 +35,18 @@ export class ScannerController {
     #init = () => {
         const lang = new LangHandler();
 
+        this.#reader = new BrowserMultiFormatReader();
+
         this.#data = new AreaResolver(this.#ctnr);
         this.#scnr = new ScannerBuilder(this.#data.get());
         this.#ui = new UIBuilder(lang, this.#data.get());
         this.#state = new StateHandler(lang, this.#scnr.get(), this.#ui.get());
 
+        this.#build(this.#scnr.get(), this.#ui.get());
+
         this.#setScope(this.#data.get());
+
+        this.#state.default();
     };
 
     #setScope = (data) => {
@@ -78,15 +88,10 @@ export class ScannerController {
     };
 
     start = async () => {
-        const reader = new BrowserMultiFormatReader();
         let timer = null;
         let code = null;
 
-        this.#build(this.#scnr.get(), this.#ui.get());
-
-        this.#state.default();
-
-        this.#ctrl = await reader.decodeFromVideoDevice(
+        this.#ctrl = await this.#reader.decodeFromVideoDevice(
             await this.#getDeviceId(),
             this.#ctnr.querySelector('video'),
             (result, error, controls) => {
@@ -125,5 +130,13 @@ export class ScannerController {
 
     stop = () => {
         this.#ctrl.stop();
+
+        this.#state.default();
+    };
+
+    return = () => {
+        this.#ctnr.querySelector('button').addEventListener('click', () => {
+            this.#ctrl.stop();
+        });
     };
 }
