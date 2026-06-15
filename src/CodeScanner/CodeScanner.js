@@ -29,4 +29,6 @@ export class CodeScanner {
     start = () => this.#ctrl.start();
 
     stop = () => this.#ctrl.stop();
+
+    return = () => this.#ctrl.return();
 }
