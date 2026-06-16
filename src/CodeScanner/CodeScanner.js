@@ -10,6 +10,8 @@ export class CodeScanner {
         this.#ctrl = new ScannerController(this.#ctnr, this.#onScan);
 
         this.#events = new EventTarget();
+
+        this.#bindCancel();
     }
 
     #onScan = (code) => {
@@ -31,6 +33,8 @@ export class CodeScanner {
             arg.forEach((e) => {
                 this.#events.addEventListener(e, callback);
             });
+
+            return;
         }
 
         this.#events.addEventListener(arg, callback);
@@ -40,5 +44,5 @@ export class CodeScanner {
 
     stop = () => this.#ctrl.stop();
 
-    cancel = () => this.#ctrl.cancel(this.#onReturn);
+    #bindCancel = () => this.#ctrl.cancel(this.#onReturn);
 }

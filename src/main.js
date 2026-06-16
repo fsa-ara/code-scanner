@@ -55,7 +55,6 @@ btnStrt.addEventListener('click', () => {
     scnr.classList.replace('invisible', 'visible');
 
     cs.start();
-    cs.cancel();
 
     cs.listener('onScan', (e) => {
         scnr.classList.replace('visible', 'invisible');
